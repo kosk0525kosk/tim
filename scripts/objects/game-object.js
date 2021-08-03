@@ -15,7 +15,11 @@ class GameObject {
   // objへの着地
   land(obj) {
     this.y = obj.topY;
-    this.dy = 0;
+    if(obj.constructor == MoveBlock) {
+      this.dy = obj.step;
+    } else {
+      this.dy = 0;
+    }
   }
 
   // objにぶつかっている(貫通しない)
@@ -56,8 +60,8 @@ class GameObject {
       )
       // y軸方向
       && (
-        b.topY - a.bottomY <= abs(a.dy) && 
-        b.topY - a.bottomY >= 0 && 
+        a.bottomY - b.topY <= 0 &&
+        a.bottomY - b.topY >= (a.dy != 0 ? a.dy : -1) &&
         a.dy <= 0)
     );
   }

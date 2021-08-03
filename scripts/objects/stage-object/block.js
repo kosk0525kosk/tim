@@ -38,6 +38,8 @@ class MoveBlock extends Block {
   update() {
     if(this.judge == 1) {
       this.moveX();
+    } else if(this.judge == 1.5) {
+      this.moveX2();
     } else {
       this.moveY();
     }
@@ -48,6 +50,12 @@ class MoveBlock extends Block {
       this.step = this.step * -1;
     }
     this.x += this.step;
+  }
+  moveX2() {
+    if(this.x >= this.mx + this.limit || this.x <= this.mx - this.limit) {
+      this.step = this.step * -1;
+    }
+    this.x -= this.step;
   }
 
   moveY() {

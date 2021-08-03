@@ -41,6 +41,7 @@ class Player extends GameObject {
     } else {
       image(this.leftwardImg, this.x, this.y, this.w, this.h);
     }
+    // rect(this.x,this.y,this.w,this.h);
     
     //弾描画
     for(let i = 0; i < 10; i++) {

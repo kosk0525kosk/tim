@@ -1,4 +1,6 @@
 let Enemys_cnt = 0;
+let timerStart = 120;
+let timer = timerStart;
 
 class GameManager {
   // ゲッター
@@ -11,8 +13,21 @@ class GameManager {
   // 初期化
   initGame() {
     this.player = new Player(0, 0);
-    this.stage = new Stage1();
-    this.status = new Status(120);
+
+    this.stage = new Stage();
+    if(stageNum == 1) {
+      this.stage = new Stage1();
+      timer = timerStart;
+    } else if(stageNum == 2) {
+      this.stage = new Stage2();
+    } else if(stageNum == 3) {
+      this.stage = new Stage3();
+    } else if(stageNum == 4) {
+      this.stage = new Stage4();
+    } else if(stageNum == 5) {
+      this.stage = new Stage5();
+    }
+    this.status = new Status();
   }
 
   // 描画
@@ -45,6 +60,17 @@ class GameManager {
 
     // タイマー、残り敵数
     this.status.update();
+
+    if(this.status.isStageClear) {
+      if(stageNum < 5) {
+        stageNum++;
+        this.initGame();
+      } else {
+        mode = CLEAR;
+      }
+    } else if(this.status.isGameOver) {
+      mode = GAMEOVER;
+    }
   }
 
   // p5jsに認識させるkeyPressedメソッド
@@ -90,19 +116,23 @@ class CoordinatesManager {
   transformCanvas() {
     resetMatrix();
 
+    rectMode(CORNER);
+    textAlign(LEFT);
+
     // キャンバスの原点
     translate(this.screenOx, this.screenOy);
-    // y軸の正の方向が上方向となるようにする
     scale(this.screenScale);
+    
+    // y軸の正の方向が上方向となるようにする
     scale(1, -1);
   }
 }
 
 // タイマー
 class Status {
-  constructor(time) {
+  constructor() {
     // 残り時間
-    this.timer = time;
+    this.timer = timer;
     this.timerSize = 40;
 
     // 残り敵数
@@ -114,6 +144,13 @@ class Status {
 
   get isGameOver() {
     return this.timer <= 0;
+  }
+
+  get isStageClear() {
+    if(this.timer > 0 && Enemys_cnt == 0) {
+      return true;
+    }
+    return false;
   }
 
   get minStr() {
